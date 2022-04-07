@@ -8,4 +8,8 @@ test('creates an emplyee object', () => {
     expect(employee.id).toEqual(expect.any(Number));
     expect(employee.email).toEqual(expect.any(String));
 
-  });
+});
+
+test('gets the employee name', () => {
+
+});
