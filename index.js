@@ -1,7 +1,18 @@
 const inquirer = require ("inquirer")
 const fs = require('fs')
 
-const promptData = () => {
+const promptData = directoryData => {
+    console.log(`
+    ==================
+    Add a New Employee
+    ==================
+    `);
+    
+    // If there is no 'employees' array property, create one
+    if (!directoryData) {
+        directoryData = [];
+    }
+    
     return inquirer.prompt([
         {
             type: 'input',
@@ -97,8 +108,54 @@ const promptData = () => {
                   return false;
                 }
               }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: 'Would you like to enter another employee?',
+            default: false
         }
     ])
+    .then(answers => {
+        directoryData.push(answers);
+        if (answers.confirmAddEmployee) {
+          return promptData(directoryData);
+        } else {
+          return directoryData;
+        };
+      }); 
+          
+}
+
+
+
+
+function generateHTML(answers) {
+    return `
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Random Pet Facts</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="./dist/style.css">
+</head>
+
+<body>
+    <header>
+        <h1 class = "bg-primary text-white">My Awesome Team</h1>
+    </header>
+
+    <section class="employee-cards bg-light">
+        <div class="employee-card
+    </section>
+
+</body>
+</html>    
+`;
 }
 
 promptData()
