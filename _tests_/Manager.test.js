@@ -9,3 +9,13 @@ test('creates a manager object', () => {
     expect(manager.email).toEqual(expect.any(String));
     expect(manager.officeNumber).toEqual(expect.any(Number));
   });
+
+  test ('returns office number', () => {
+    const manager = new Manager('Manager', 'David', 2, 'david@123.com', 'UNC');
+    expect(manager.getOfficeNumber()).toEqual(expect.any(Number));
+  });
+
+  test ('returns employee role', () => {
+    const manager = new Manager('Manager', 'David', 2, 'david@123.com', 'github');
+    expect(manager.getRole()).toBe('Manager');
+  });
