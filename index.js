@@ -1,5 +1,10 @@
 const inquirer = require ("inquirer")
 const fs = require('fs')
+const generateHTML = require ('./src/GenerateHTML.js')
+// const Employee = require ('./lib/Employee')
+// const Manager = require ('./lib/Manager')
+// const Engineer = require ('./lib/Engineer')
+// const Intern = require ('./lib/Intern')
 
 const promptData = directoryData => {
     console.log(`
@@ -120,7 +125,7 @@ const promptData = directoryData => {
         directoryData.push(answers);
         if (answers.confirmAddEmployee) {
             console.log(directoryData);
-            console.log(promptData(directoryData));
+            
             return promptData(directoryData);
         } else {
           return directoryData;
@@ -130,9 +135,31 @@ const promptData = directoryData => {
           
 }
 
+function writeToFile(filename, answers) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(filename, generateHTML(answers), err => {
+            if (err) {
+              reject(err);
+              return;
+            }
+      
+            resolve({
+              ok: true,
+              message: 'File created!'
+            });
+          });
+        });
+      };
 
 
+// Create a function to initialize app
+function init() {
+    promptData()
+        .then(answers => {
+            return writeToFile("./dist/index.html", answers);  
+        })
+}
 
+// Function call to initialize app
+init()
 
-
-promptData()
