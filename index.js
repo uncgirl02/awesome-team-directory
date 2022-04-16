@@ -1,10 +1,12 @@
 const inquirer = require ("inquirer")
 const fs = require('fs')
 const generateHTML = require ('./src/GenerateHTML.js')
-// const Employee = require ('./lib/Employee')
-// const Manager = require ('./lib/Manager')
-// const Engineer = require ('./lib/Engineer')
-// const Intern = require ('./lib/Intern')
+
+const Manager = require ('./lib/Manager')
+const Engineer = require ('./lib/Engineer')
+const Intern = require ('./lib/Intern')
+
+let roles = {Managers:[], Interns:[], Engineers:[]}
 
 const promptData = directoryData => {
     console.log(`
@@ -128,16 +130,30 @@ const promptData = directoryData => {
             
             return promptData(directoryData);
         } else {
-          return directoryData;
-          
+          return directoryData;  
         };
-      }); 
-          
-}
+    })
+    .then(directoryData => {
+      let role = directoryData.role
+    
+        if (role === "Engineer") {
+            const newEngineer = new Engineer (name, id, email, github);
+            roles.Engineers.push(newEngineer)  
+        }
+        if (role === "Manager") {
+            employee = new Manager (name, id, email, officeNumber);
+            roles.Managers.push(newManager)    
+        } 
+        else if (role === "Intern") {
+            employee = new Intern (name, id, email, school)
+            roles.Interns.push(newIntern);
+        }
+    })      
+};
 
-function writeToFile(filename, answers) {
+function writeToFile (directoryData) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(filename, generateHTML(answers), err => {
+        fs.writeFile("./dist/index.html", directoryData, err => {
             if (err) {
               reject(err);
               return;
@@ -155,9 +171,13 @@ function writeToFile(filename, answers) {
 // Create a function to initialize app
 function init() {
     promptData()
-        .then(answers => {
-            return writeToFile("./dist/index.html", answers);  
-        })
+    .then(directoryData => {
+    return generateHTML()
+      return writeToFile(directoryData);
+    })
+    .catch(err => {
+    console.log(err);
+    });
 }
 
 // Function call to initialize app
