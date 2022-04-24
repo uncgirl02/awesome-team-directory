@@ -6,9 +6,7 @@ const Manager = require ('./lib/Manager')
 const Engineer = require ('./lib/Engineer')
 const Intern = require ('./lib/Intern')
 
-let roles = {Managers:[], Interns:[], Engineers:[]}
-
-const promptData = directoryData => {
+const promptData = roles => {
     console.log(`
     ==================
     Add a New Employee
@@ -16,8 +14,9 @@ const promptData = directoryData => {
     `);
     
     // If there is no 'employees' array property, create one
-    if (!directoryData) {
-        directoryData = [];
+    const roles = {Managers:[], Interns:[], Engineers:[]}
+    if (!roles) {
+        roles = {};
     }
     
     return inquirer.prompt([
@@ -124,36 +123,36 @@ const promptData = directoryData => {
         }
     ])
     .then(answers => {
-        directoryData.push(answers);
-        if (answers.confirmAddEmployee) {
-            console.log(directoryData);
-            
-            return promptData(directoryData);
-        } else {
-          return directoryData;  
-        };
-    })
-    .then(directoryData => {
-      let role = directoryData.role
-    
-        if (role === "Engineer") {
-            const newEngineer = new Engineer (name, id, email, github);
-            roles.Engineers.push(newEngineer)  
+      for (let i = 0; i < answers.length; i++) {
+        let employeeRole = answers[i].role
+        console.log(employeeRole);
+        if (employeeRole === "Engineer") {
+          const newEngineer = new Engineer (name, id, email, github);
+          roles.Engineers.push(newEngineer)
         }
-        if (role === "Manager") {
-            employee = new Manager (name, id, email, officeNumber);
+        if (employeeRole === "Manager") {
+            const newManager = new Manager (name, id, email, officeNumber);
             roles.Managers.push(newManager)    
         } 
-        else if (role === "Intern") {
-            employee = new Intern (name, id, email, school)
+        if (employeeRole === "Intern") {
+            const newIntern = new Intern (name, id, email, school)
             roles.Interns.push(newIntern);
         }
-    })      
+        if (answers.confirmAddEmployee) {
+              console.log(roles);
+              
+              return promptData(roles);
+        } else {
+            return roles;  
+        };
+      }
+    })
 };
 
-function writeToFile (directoryData) {
+
+function writeToFile (filename, { roles } ) {
     return new Promise((resolve, reject) => {
-        fs.writeFile("./dist/index.html", directoryData, err => {
+        fs.writeFile(filename, generateHTML(roles), err => {
             if (err) {
               reject(err);
               return;
@@ -163,23 +162,19 @@ function writeToFile (directoryData) {
               ok: true,
               message: 'File created!'
             });
-          });
         });
-      };
-
-
-// Create a function to initialize app
-function init() {
-    promptData()
-    .then(directoryData => {
-    return generateHTML()
-      return writeToFile(directoryData);
-    })
-    .catch(err => {
-    console.log(err);
     });
-}
+};
 
+
+function init() {
+  promptData()
+      .then(roles => {
+          return writeToFile("./dist/index.html", roles);  
+      });
+};
+
+    
 // Function call to initialize app
 init()
 

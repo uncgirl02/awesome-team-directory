@@ -1,10 +1,10 @@
 
-const Manager = require ('../lib/Manager.js')
-const Engineer = require ('../lib/Engineer.js')
-const Intern = require ('../lib/Engineer.js')
+// const Manager = require ('../lib/Manager.js')
+// const Engineer = require ('../lib/Engineer.js')
+// const Intern = require ('../lib/Engineer.js')
 
 function generateInternHTML(Interns) {
-  if (Managers = []) {
+  if (Interns = []) {
     return "";
   } else {
   for (let i = 0; i < Interns.length; i++) {
@@ -37,7 +37,7 @@ function generateInternHTML(Interns) {
 }
 
 function generateEngineerHTML(Engineers) {
-  if (Managers = []) {
+  if (Engineers = []) {
     return "";
   } else {
   for (let i = 0; i < Engineers.length; i++) {
@@ -104,39 +104,8 @@ function generateManagerHTML(Managers) {
 }
 
 
-// function generateCardsArray (directoryData) {
-    
-//     cardsArray = [];
-
-//     for (let i = 0; i < directoryData.length; i++) {
-//     const employee = directoryData[i];
-//     const role = employee.getRole(); 
-
-//         if (role === 'Manager') {
-//             const managerCard = generateManagerHTML(manager);
-
-//             cardsArray.push(managerCard);
-//         }
-
-//         if (role === 'Engineer') {
-//             const engineerCard = generateEngineerHTML(engineer);
-
-//             cardsArray.push(engineerCard);
-//         }
-
-//         if (role === 'Intern') {
-//             const internCard = generateInternHTML(intern);
-
-//             cardsArray.push(internCard);
-//         }
-//     } 
-//     console.log(generateCardsArray(directoryData))
-//     return generateCardsArray(directoryData); 
-    
-// }
-
-
-function generateHTML() {
+module.exports = generateHTML => {
+const { Interns, Engineers, Managers } = generateHTML
     
     return `
     <!DOCTYPE html>
@@ -147,7 +116,7 @@ function generateHTML() {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>My Awesome Team</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <link rel="stylesheet" href="./dist/style.css">
+        <link rel="stylesheet" href="../dist/style.css">
     </head>
     
     <body>
@@ -156,15 +125,14 @@ function generateHTML() {
             <h1 class="header-title">My Awesome Team</h1>
         </header>
         
-        ${generateManagerHTML()}
+        ${generateManagerHTML(Managers)}
 
-        ${generateEngineerHTML()}
+        ${generateEngineerHTML(Engineers)}
 
-        ${generateInternHTML()}
+        ${generateInternHTML(Interns)}
     
     </body>
     </html>    
 `
 }
 
-module.exports = generateHTML
