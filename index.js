@@ -6,7 +6,9 @@ const Manager = require ('./lib/Manager')
 const Engineer = require ('./lib/Engineer')
 const Intern = require ('./lib/Intern')
 
-const promptData = roles => {
+const roles = { Managers:[], Interns:[], Engineers:[] }
+
+function promptData() {
     console.log(`
     ==================
     Add a New Employee
@@ -14,10 +16,10 @@ const promptData = roles => {
     `);
     
     // If there is no 'employees' array property, create one
-    const roles = {Managers:[], Interns:[], Engineers:[]}
-    if (!roles) {
-        roles = {};
-    }
+
+    // if (!roles) {
+    //     roles = {};
+    // }
     
     return inquirer.prompt([
         {
@@ -137,10 +139,10 @@ const promptData = roles => {
         if (employeeRole === "Intern") {
             const newIntern = new Intern (name, id, email, school)
             roles.Interns.push(newIntern);
+            console.log(roles);
         }
         if (answers.confirmAddEmployee) {
               console.log(roles);
-              
               return promptData(roles);
         } else {
             return roles;  
@@ -150,9 +152,9 @@ const promptData = roles => {
 };
 
 
-function writeToFile (filename, { roles } ) {
+function writeToFile (filename, answers ) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(filename, generateHTML(roles), err => {
+        fs.writeFile(filename, generateHTML(answers, roles), err => {
             if (err) {
               reject(err);
               return;
@@ -169,12 +171,12 @@ function writeToFile (filename, { roles } ) {
 
 function init() {
   promptData()
-      .then(roles => {
-          return writeToFile("./dist/index.html", roles);  
+      .then(answers => {
+        console.log(answers)
+          return writeToFile("./dist/index.html", answers);  
       });
 };
 
     
 // Function call to initialize app
 init()
-
