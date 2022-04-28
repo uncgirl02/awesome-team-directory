@@ -6,7 +6,7 @@ const Manager = require ('./lib/Manager')
 const Engineer = require ('./lib/Engineer')
 const Intern = require ('./lib/Intern')
 
-const roles = { Managers:[], Interns:[], Engineers:[] }
+let roles = { Managers:[], Interns:[], Engineers:[] }
 
 function promptData() {
     console.log(`
@@ -125,36 +125,35 @@ function promptData() {
         }
     ])
     .then(answers => {
-      for (let i = 0; i < answers.length; i++) {
-        let employeeRole = answers[i].role
+      console.log(answers);
+      // for (let i = 0; i < answers.length; i++) {
+        let employeeRole = answers.role
         console.log(employeeRole);
         if (employeeRole === "Engineer") {
-          const newEngineer = new Engineer (name, id, email, github);
+          const newEngineer = new Engineer (answers.name, answers.id, answers.email, answers.github);
           roles.Engineers.push(newEngineer)
         }
         if (employeeRole === "Manager") {
-            const newManager = new Manager (name, id, email, officeNumber);
+            const newManager = new Manager (answers.name, answers.id, answers.email, answers.officeNumber);
             roles.Managers.push(newManager)    
         } 
         if (employeeRole === "Intern") {
-            const newIntern = new Intern (name, id, email, school)
+            const newIntern = new Intern (answers.name, answers.id, answers.email, answers.school)
             roles.Interns.push(newIntern);
             console.log(roles);
         }
         if (answers.confirmAddEmployee) {
               console.log(roles);
-              return promptData(roles);
-        } else {
-            return roles;  
-        };
-      }
+              promptData(roles);
+        } 
+      // }
     })
 };
 
 
-function writeToFile (filename, answers ) {
+function writeToFile (filename) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(filename, generateHTML(answers, roles), err => {
+        fs.writeFile(filename, generateHTML(roles), err => {
             if (err) {
               reject(err);
               return;
@@ -171,12 +170,19 @@ function writeToFile (filename, answers ) {
 
 function init() {
   promptData()
-      .then(answers => {
-        console.log(answers)
-          return writeToFile("./dist/index.html", answers);  
-      });
+      .then(
+          writeToFile("./dist/index.html") 
+      );
 };
 
     
 // Function call to initialize app
 init()
+
+// function(params){
+  
+//   //use params to execute some logic
+//   var biggerValue = params + 1;
+
+//   return something;
+// }
