@@ -8,6 +8,7 @@ const Intern = require ('./lib/Intern')
 
 let roles = { Managers:[], Interns:[], Engineers:[] }
 
+//function to use the console log to answer questions about employees
 function promptData() {
     console.log(`
     ==================
@@ -15,13 +16,7 @@ function promptData() {
     ==================
     `);
     
-    // If there is no 'employees' array property, create one
-
-    // if (!roles) {
-    //     roles = {};
-    // }
-    
-    return inquirer.prompt([
+    inquirer.prompt([
         {
             type: 'input',
             name: 'name',
@@ -124,11 +119,10 @@ function promptData() {
             default: false
         }
     ])
+    //then take the answers and push them into the appropriate array according to role
     .then(answers => {
       console.log(answers);
-      // for (let i = 0; i < answers.length; i++) {
-        let employeeRole = answers.role
-        console.log(employeeRole);
+        let employeeRole = answers.role;
         if (employeeRole === "Engineer") {
           const newEngineer = new Engineer (answers.name, answers.id, answers.email, answers.github);
           roles.Engineers.push(newEngineer)
@@ -140,20 +134,22 @@ function promptData() {
         if (employeeRole === "Intern") {
             const newIntern = new Intern (answers.name, answers.id, answers.email, answers.school)
             roles.Interns.push(newIntern);
-            console.log(roles);
         }
+        //if user wants to add another employee, run promptData again...
         if (answers.confirmAddEmployee) {
               console.log(roles);
               promptData(roles);
-        } 
-      // }
+        //...else, run the writeToFile function
+        } else {
+          writeToFile();
+        }
     })
 };
 
-
-function writeToFile (filename) {
+//Function to write the file
+function writeToFile () {
     return new Promise((resolve, reject) => {
-        fs.writeFile(filename, generateHTML(roles), err => {
+        fs.writeFile('./dist/index.html', generateHTML(roles), err => {
             if (err) {
               reject(err);
               return;
@@ -167,22 +163,8 @@ function writeToFile (filename) {
     });
 };
 
+//Function to call promptData
+promptData()
 
-function init() {
-  promptData()
-      .then(
-          writeToFile("./dist/index.html") 
-      );
-};
 
     
-// Function call to initialize app
-init()
-
-// function(params){
-  
-//   //use params to execute some logic
-//   var biggerValue = params + 1;
-
-//   return something;
-// }
